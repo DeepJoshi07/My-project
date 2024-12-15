@@ -1,0 +1,44 @@
+<% layout("layouts/boilerplate") %>
+<body>
+    <div class="row">
+        <div class="col-8 offset-2">
+            <br><br>
+            <h2>Add your information</h2>
+            <form method="POST" action="/listings">
+                <div class="mb-3">
+                    <label for="title" class="form-label"></label>
+                <input type="text" name="listing[title]" placeholder="enter title" class="form-control">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="descripton" class="form-label"></label>
+                    <textarea name="listing[description]" id="" placeholder="write your description" class="form-control"></textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="location" class="form-label"></label>
+                    <input type="text" name="listing[location]" placeholder="enter location" class="form-control">
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-4">
+                        <label for="price" class="form-label"></label>
+                        <input type="text" name="listing[price]" placeholder="enter price" class="form-control">
+                    </div>
+                
+                    <div class="mb-3 col-8">
+                        <label for="country" class="form-label"></label>
+                        <input type="text" name="listing[country]" placeholder="write country name" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="image" class="form-label"></label>
+                    <input type="text" name="listing[image]" placeholder="enter image LINK/URl" class="form-control">
+                </div>
+                <br><br>
+                <button class="btn btn-dark">list it</button>
+                <br><br>
+            </form>
+        </div>
+    </div>
+</body>
