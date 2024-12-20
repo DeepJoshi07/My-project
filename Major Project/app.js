@@ -6,7 +6,8 @@ const path = require('path');
 const Listing = require("./Models/listing.js");
 const methodOverride = require('method-override');
 const ejs_mate = require('ejs-mate');
-
+const WrapAsync = require('./utils/WrapAsync.js');
+const ExpressError = require('./utils/ExpressError.js');
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wonderlust";
 
@@ -50,44 +51,63 @@ app.get("/",(req,res)=>{
 //      res.send("testing successful");
 // });
 
-app.get("/listings",async(req,res)=>{
+
+app.get("/listings",WrapAsync(async(req,res)=>{
     let listing = await Listing.find({});
     
     res.render("listings/index.ejs",{listing});
-});
+}));
 
+// new listing
 app.get("/listings/new",(req,res)=>{
     res.render("listings/new.ejs");
 });
 
-app.get("/listings/:id",async(req,res)=>{
+// show listing
+app.get("/listings/:id",WrapAsync(async(req,res)=>{
     let id = req.params.id;
     const listing = await Listing.findById(id);
     
     res.render("listings/show.ejs",{listing});
-});
+}));
 
-app.post("/listings",async(req,res)=>{
+app.post("/listings",WrapAsync(async(req,res)=>{
     let new_listing = new Listing(req.body.listing);
+    if(!req.body.listing){
+        throw new ExpressError(400,"send valid data for listing");
+    };
     await new_listing.save();
     res.redirect("/listings");
-});
+}));
 
-app.get("/listings/:id/edit",async(req,res)=>{
+// edit listing
+app.get("/listings/:id/edit",WrapAsync(async(req,res)=>{
     let id = req.params.id;
     const listing = await Listing.findById(id);
     
     res.render("listings/edit.ejs",{listing});
-});
+}));
 
-app.put("/listings/:id/edit",async(req,res)=>{
+app.put("/listings/:id/edit",WrapAsync(async(req,res)=>{
     let id = req.params.id;
+    if(!req.body.listing){
+        throw new ExpressError(400,"send valid data for listing");
+    };
     await Listing.findByIdAndUpdate(id,{...req.body.listing},{setDefaultsOnInsert:true});
     res.redirect("/listings");
-});
+}));
 
-app.delete("/listings/:id",async(req,res)=>{
+// delete listing
+app.delete("/listings/:id",WrapAsync(async(req,res,next)=>{
     let id = req.params.id;
     await Listing.findByIdAndDelete(id);
     res.redirect("/listings");
+}));
+
+app.all("*",(req,res,next)=>{
+    next(new ExpressError(404,"Page not found"));
+});
+app.use((err,req,res,next)=>{
+    let {statusCode = 500 ,message = "something went wrong"} = err;
+    res.status(statusCode).send(message);
 });

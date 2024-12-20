@@ -12,11 +12,13 @@ const listingSchema = new Schema({
     image: {
         filename:{
             type:String,
+            default:"listing image",
+            set:(v) => v === "" ?"listing image":v,
         },
         url:{
             type:String,
-            default:"https://unsplash.com/photos/silhouette-of-palm-trees-during-golden-hour-ovryxelIgh4",
-            set:(v) => v === "" ?"https://unsplash.com/photos/silhouette-of-palm-trees-during-golden-hour-ovryxelIgh4":v,
+            default:"https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg",
+            set:(v) => v === "" ?"https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg":v,
         }
         
     },
